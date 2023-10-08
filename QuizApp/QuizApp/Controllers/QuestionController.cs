@@ -7,10 +7,18 @@ namespace QuizApp.Controllers
     [Route("[controller]")]
     public class QuestionController : ControllerBase
     {
-        [HttpGet("{category}/{number:int}")]
-        public string Get([FromRoute]QuestionRequest request)
+        private readonly IHttpClientFactory clientFactory;
+
+        public QuestionController(IHttpClientFactory clientFactory)
         {
-            return $"{request.Category} {request.Number}";
+            this.clientFactory = clientFactory;
+        }
+
+        [HttpGet("{category}/{number:int}")]
+        public async Task<string> Get([FromRoute]QuestionRequest request)
+        {
+            var httpClient = clientFactory.CreateClient();
+            return await httpClient.GetStringAsync("https://opentdb.com/api.php?amount=10");
         }
     }
 }
