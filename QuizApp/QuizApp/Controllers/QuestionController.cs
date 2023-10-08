@@ -14,11 +14,13 @@ namespace QuizApp.Controllers
             this.clientFactory = clientFactory;
         }
 
-        [HttpGet("{category}/{number:int}")]
-        public async Task<string> Get([FromRoute]QuestionRequest request)
+        [HttpGet("{category}/{number:int:range(1,10)}")]
+        public async Task<IEnumerable<QuestionData>> Get([FromRoute]QuestionRequest request)
         {
             var httpClient = clientFactory.CreateClient();
-            return await httpClient.GetStringAsync("https://opentdb.com/api.php?amount=10");
+            var url = $"https://opentdb.com/api.php?amount={request.Number}&category={(int)request.Category}";
+            var response = await httpClient.GetFromJsonAsync<QuestionResponse>(url);
+            return response!.Results;
         }
     }
 }
