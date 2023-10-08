@@ -7,10 +7,20 @@ namespace QuizApp.Controllers
     [Route("[controller]")]
     public class QuestionController : ControllerBase
     {
-        [HttpGet("{category}/{number:int}")]
-        public string Get([FromRoute]QuestionRequest request)
+        private readonly IHttpClientFactory clientFactory;
+
+        public QuestionController(IHttpClientFactory clientFactory)
         {
-            return $"{request.Category} {request.Number}";
+            this.clientFactory = clientFactory;
+        }
+
+        [HttpGet("{category}/{number:int:range(1,10)}")]
+        public async Task<IEnumerable<QuestionData>> Get([FromRoute]QuestionRequest request)
+        {
+            var httpClient = clientFactory.CreateClient();
+            var url = $"https://opentdb.com/api.php?amount={request.Number}&category={(int)request.Category}";
+            var response = await httpClient.GetFromJsonAsync<QuestionResponse>(url);
+            return response!.Results;
         }
     }
 }
