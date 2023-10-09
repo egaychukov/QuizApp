@@ -1,6 +1,6 @@
 ﻿namespace QuizApp.Models
 {
-    public class QuestionData
+    public record QuestionData
     {
         public string Question { get; set; }
         public string Correct_Answer { get; set; }

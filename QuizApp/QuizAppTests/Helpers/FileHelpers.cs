@@ -10,9 +10,8 @@ namespace QuizAppTests.Helpers
         public static T GetEntityFromJson<T>(string jsonFileName)
         {
             var jsonFileContent = GetResponseContent(jsonFileName);
-            var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-            var result = JsonSerializer.Deserialize<T>(jsonFileContent, options);
-            return result;
+            var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase};
+            return JsonSerializer.Deserialize<T>(jsonFileContent, options);
         }
 
         public static string GetResponseContent(string contentFileName)

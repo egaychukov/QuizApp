@@ -6,8 +6,8 @@
 			"type": "boolean",
 			"difficulty": "medium",
 			"question": "The Platypus is a mammal.",
-			"correct_answer": "True",
-			"incorrect_answers": [
+			"correct_Answer": "True",
+			"incorrect_Answers": [
 				"False"
 			]
 		}
