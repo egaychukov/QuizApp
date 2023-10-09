@@ -1,33 +1,27 @@
-using Moq;
-using Moq.Protected;
 using System.Net;
-using System.Net.Http;
-using System.Text;
+using QuizAppTests.Helpers;
+using QuizApp.Controllers;
+using QuizApp;
+using QuizApp.Models;
 
 namespace QuizAppTests
 {
     public class QuestionControllerTests
     {
-        public QuestionControllerTests()
+        [Fact]
+        public async Task Get_ValidRequestParameters_QuestionNumberRemainsNotAffected()
         {
+            // Arrange 
+            var responseTextContent = FileHelpers.GetResponseContent("HistoryQuestions");
+            var httpClientFactory = HttpClientHelpers.GetHttpClientFactoryMock(HttpStatusCode.OK, responseTextContent);
+            var questionController = new QuestionController(httpClientFactory.Object);
+            var questionRequest = new QuestionRequest() { Number = 2, Category = Category.History };
 
-        }
+            // Act
+            var questions = await questionController.Get(questionRequest);
 
-        private static Mock<HttpMessageHandler> GetMessageHandlerMock(HttpStatusCode statusCode, string responseContent)
-        {
-            var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
-
-            mockHttpMessageHandler.Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.IsAny<HttpRequestMessage>(),
-                    ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage
-                {
-                    StatusCode = statusCode,
-                    Content = new StringContent(responseContent, Encoding.UTF8, "application/json")
-                });
-            return mockHttpMessageHandler;
-        }
+            // Assert
+            Assert.Equal(questionRequest.Number, questions.Count());
+        }        
     }
 }
