@@ -1,0 +1,15 @@
+﻿{
+	"response_code": 0,
+	"results": [
+		{
+			"category": "Animals",
+			"type": "boolean",
+			"difficulty": "medium",
+			"question": "The Platypus is a mammal.",
+			"correct_answer": "True",
+			"incorrect_answers": [
+				"False"
+			]
+		}
+	]
+}

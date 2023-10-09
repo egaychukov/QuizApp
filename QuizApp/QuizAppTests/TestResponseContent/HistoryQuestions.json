@@ -1,0 +1,29 @@
+﻿{
+  "response_code": 0,
+  "results": [
+    {
+      "category": "History",
+      "type": "multiple",
+      "difficulty": "hard",
+      "question": "Spain was formed in 1469 with the marriage of Isabella I of Castile and Ferdinand II of what other Iberian kingdom?",
+      "correct_answer": "Aragon",
+      "incorrect_answers": [
+        "Galicia",
+        "Le&oacute;n",
+        "Navarre"
+      ]
+    },
+    {
+      "category": "History",
+      "type": "multiple",
+      "difficulty": "medium",
+      "question": "When did the Battle of the Bulge end?",
+      "correct_answer": "January 25, 1945",
+      "incorrect_answers": [
+        "August 6, 1945",
+        "December 7, 1941",
+        "December 16, 1944"
+      ]
+    }
+  ]
+}
