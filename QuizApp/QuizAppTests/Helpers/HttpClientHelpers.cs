@@ -9,7 +9,7 @@ namespace QuizAppTests.Helpers
     {
         public static Mock<IHttpClientFactory> GetHttpClientFactoryMock(HttpStatusCode statusCode, string responseContent)
         {
-            var messageHandler = GetMessageHandlerMock(HttpStatusCode.OK, responseContent);
+            var messageHandler = GetMessageHandlerMock(statusCode, responseContent);
             var httpClient = new HttpClient(messageHandler.Object);
             var mockFactory = new Mock<IHttpClientFactory>();
             mockFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httpClient);

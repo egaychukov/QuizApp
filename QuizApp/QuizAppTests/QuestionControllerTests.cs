@@ -44,5 +44,16 @@ namespace QuizAppTests
             Assert.Equal(expectedQuestion.Correct_Answer, actualQuestion.Correct_Answer);
             Assert.True(Enumerable.SequenceEqual(expectedQuestion.Incorrect_Answers, actualQuestion.Incorrect_Answers));
         }
+
+        [Fact]
+        public async Task Get_InternalApiResponsesWithError_ThrowsHttpRequestException()
+        {
+            // Arrange
+            var httpClientFactory = HttpClientHelpers.GetHttpClientFactoryMock(HttpStatusCode.NotFound, string.Empty);
+            var questionController = new QuestionController(httpClientFactory.Object);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await questionController.Get(new QuestionRequest()));
+        }
     }
 }
