@@ -20,7 +20,7 @@ namespace QuizApp.Controllers
             var httpClient = clientFactory.CreateClient();
             var url = $"https://opentdb.com/api.php?amount={request.Number}&category={(int)request.Category}";
             var response = await httpClient.GetFromJsonAsync<QuestionResponse>(url);
-            return response!.Results;
+            return Enumerable.Empty<QuestionData>();
         }
     }
 }
