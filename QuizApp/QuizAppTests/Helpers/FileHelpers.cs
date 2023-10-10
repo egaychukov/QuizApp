@@ -16,7 +16,7 @@ namespace QuizAppTests.Helpers
 
         public static string GetResponseContent(string contentFileName)
         {
-            var contentFilePath = Path.Combine($".\\{ResponseContentDirectory}", $"{contentFileName}.json");
+            var contentFilePath = Path.Combine($"{ResponseContentDirectory}", $"{contentFileName}.json");
             return File.ReadAllText(contentFilePath);
         }
     }
