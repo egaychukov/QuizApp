@@ -15,7 +15,7 @@ namespace QuizApp.Controllers
         }
 
         [HttpGet("{category}/{number:int:range(1,10)}")]
-        public async Task<IEnumerable<QuestionData>> Get([FromRoute]QuestionRequest request)
+        public async Task<IEnumerable<QuestionData>> GetAsync([FromRoute]QuestionRequest request)
         {
             var httpClient = clientFactory.CreateClient();
             var url = $"https://opentdb.com/api.php?amount={request.Number}&category={(int)request.Category}";
