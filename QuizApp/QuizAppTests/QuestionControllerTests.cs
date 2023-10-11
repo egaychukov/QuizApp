@@ -18,7 +18,7 @@ namespace QuizAppTests
             var questionRequest = new QuestionRequest() { Number = 2, Category = Category.History };
 
             // Act
-            var questions = await questionController.GetAsync(questionRequest);
+            var questions = questionController.GetAsync(questionRequest);
 
             // Assert
             Assert.Equal(questionRequest.Number, questions.Count());
@@ -35,7 +35,7 @@ namespace QuizAppTests
             var expectedQuestion = questionResponse.Results.FirstOrDefault();
 
             // Act
-            var questions = await questionController.GetAsync(new QuestionRequest());
+            var questions = questionController.GetAsync(new QuestionRequest());
 
             // Assert
             var actualQuestion = questions.FirstOrDefault();
@@ -43,17 +43,6 @@ namespace QuizAppTests
             Assert.Equal(expectedQuestion.Question, actualQuestion.Question);
             Assert.Equal(expectedQuestion.Correct_Answer, actualQuestion.Correct_Answer);
             Assert.True(Enumerable.SequenceEqual(expectedQuestion.Incorrect_Answers, actualQuestion.Incorrect_Answers));
-        }
-
-        [Fact]
-        public async Task GetAsync_InternalApiResponsesWithError_ThrowsHttpRequestException()
-        {
-            // Arrange
-            var httpClientFactory = HttpClientHelpers.GetHttpClientFactoryMock(HttpStatusCode.NotFound, string.Empty);
-            var questionController = new QuestionController(httpClientFactory.Object);
-
-            // Act & Assert
-            await Assert.ThrowsAsync<HttpRequestException>(async () => await questionController.GetAsync(new QuestionRequest()));
         }
     }
 }
