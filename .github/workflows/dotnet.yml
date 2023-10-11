@@ -5,9 +5,9 @@ name: .NET
 
 on:
   push:
-    branches: [ "main", "tests/**" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main", "tests/**" ]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -22,14 +22,10 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
     - name: Install SonarCloud Scanner
       run: dotnet tool install --global dotnet-sonarscanner
+    - name: Restore dependencies
+      run: dotnet restore
     - name: Build and analyze
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -39,4 +35,6 @@ jobs:
         dotnet sonarscanner begin /k:"egaychukov_QuizApp" /o:"egaychukov" /d:sonar.login="${SONAR_TOKEN}" /d:sonar.host.url="https://sonarcloud.io"
         dotnet build
         dotnet sonarscanner end /d:sonar.login="${SONAR_TOKEN}"
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
       
