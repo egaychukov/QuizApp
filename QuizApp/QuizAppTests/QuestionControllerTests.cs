@@ -46,7 +46,7 @@ namespace QuizAppTests
         }
 
         [Fact]
-        public async Task get_InternalApiResponsesWithError_ThrowsHttpRequestException()
+        public async Task Get_InternalApiResponsesWithError_ThrowsHttpRequestException()
         {
             // Arrange
             var httpClientFactory = HttpClientHelpers.GetHttpClientFactoryMock(HttpStatusCode.NotFound, string.Empty);
