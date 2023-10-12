@@ -1,0 +1,20 @@
+name: Test Workflow
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: Log Level
+        type: choice
+        default: warning
+        options:
+          - warning
+          - info
+          - debug
+jobs:
+  print-log:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up the environment
+        run: echo Setting up the environment
+      - name: Display input
+        run: echo Output ${{ inputs.logLevel }} 
