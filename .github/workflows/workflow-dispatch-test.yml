@@ -18,3 +18,4 @@ jobs:
         run: echo Setting up the environment
       - name: Display input
         run: echo Output ${{ inputs.logLevel }} 
+      - run: dir
