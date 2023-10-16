@@ -61,11 +61,10 @@ jobs:
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
     - name: Test
       run: dotnet test --logger "trx;LogFileName=test-results.trx" --no-build --verbosity normal
-    - run: dir /AD /B /ON /S
     - name: Display test results
       uses: dorny/test-reporter@v1
       if: success() || failure()
       with:
           name: xUnit Tests
-          path: .\QuizApp\QuizApp\QuizAppTests\TestResults\*.trx
+          path: QuizApp\QuizAppTests\TestResults\*.trx
           reporter: dotnet-trx
