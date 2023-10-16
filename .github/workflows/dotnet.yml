@@ -13,6 +13,8 @@ jobs:
   build:
   
     runs-on: windows-latest
+    outputs:
+      paths: ${{ steps.list-files.outputs.paths }}
     defaults:
       run:
         working-directory: ./QuizApp
@@ -23,18 +25,16 @@ jobs:
         dotnet-version: 6.0.x
 
 
-    - name: List all files
-      id: lister
-      uses: Rishabh510/Path-lister-action@master
+    - name: List Files
+      id: list-files
+      uses: mirko-felice/list-files-action@v3.0.5
       with:
-        path: "."
-        type: "*"
-    - name: Output results
-      run: |
-        echo "Found ${{ steps.lister.outputs.path_count }} files:"
-        for path in ${{ steps.lister.outputs.paths }}; do
-        echo $path
-        done
+          repo: ${{ github.repository }}
+          ref: ${{ github.ref }}
+          path: "."
+          ext: ".*"
+
+
     - name: Restore dependencies
       run: dotnet restore
     - name: Build and analyze
@@ -55,3 +55,15 @@ jobs:
           name: xUnit Tests
           path: QuizApp\QuizAppTests\TestResults\*.trx
           reporter: dotnet-trx
+  
+  
+  Test:
+    needs: build
+    strategy:
+      matrix:
+        paths: ${{ fromJson(needs.list-files.outputs.paths) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output results
+        run: |
+          echo ${{ matrix.paths }}
