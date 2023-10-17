@@ -66,6 +66,6 @@ jobs:
       if: success() || failure()
       with:
           name: xUnit Tests
-          path: QuizApp\QuizAppTests\TestResults\test-results.trx
+          path: QuizApp/QuizAppTests/TestResults/test-results.trx
           reporter: dotnet-trx
       
