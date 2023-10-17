@@ -13,8 +13,6 @@ jobs:
   build:
   
     runs-on: windows-latest
-    outputs:
-      paths: ${{ steps.list-files.outputs.paths }}
     defaults:
       run:
         working-directory: ./QuizApp
@@ -23,18 +21,33 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-
-
-    - name: List Files
-      id: list-files
-      uses: mirko-felice/list-files-action@v3.0.5
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
       with:
-          repo: ${{ github.repository }}
-          ref: ${{ github.ref }}
-          path: "."
-          ext: ".*"
-
-
+          java-version: 17
+          distribution: 'zulu'
+    - uses: actions/checkout@v3
+      with:
+          fetch-depth: 0
+    - name: Cache SonarCloud packages
+      uses: actions/cache@v3
+      with:
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+    - name: Cache SonarCloud scanner
+      id: cache-sonar-scanner
+      uses: actions/cache@v3
+      with:
+          path: .\.sonar\scanner
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
+    - name: Install SonarCloud scanner
+      if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+      shell: powershell
+      run: |
+          New-Item -Path .\.sonar\scanner -ItemType Directory
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
     - name: Restore dependencies
       run: dotnet restore
     - name: Build and analyze
@@ -46,24 +59,13 @@ jobs:
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"egaychukov_QuizApp" /o:"egaychukov" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-    - name: Test
+    - name: Conduct testing
       run: dotnet test --logger "trx;LogFileName=test-results.trx" --no-build --verbosity normal
     - name: Display test results
       uses: dorny/test-reporter@v1
       if: success() || failure()
       with:
           name: xUnit Tests
-          path: QuizApp\QuizAppTests\TestResults\*.trx
+          path: QuizApp\QuizAppTests\TestResults\test-results.trx
           reporter: dotnet-trx
-  
-  
-  Test:
-    needs: build
-    strategy:
-      matrix:
-        paths: ${{ fromJson(needs.list-files.outputs.paths) }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Output results
-        run: |
-          echo ${{ matrix.paths }}
+      
